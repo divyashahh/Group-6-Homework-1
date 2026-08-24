@@ -1,0 +1,10 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Group 6 Homework"
+
+format:
+  html:
+    toc: true
