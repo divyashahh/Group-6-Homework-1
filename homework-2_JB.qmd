@@ -74,3 +74,41 @@ after treatment, the subjects were measured again (subjects 1 through 20 match)
     ```
 
     Comparing the two resulted averages, notice how when we included everyone, the average decreased by 17, however this resulted included 3 patients whose blood pressure did not decrease. After we calculated the average only including the 17 patients who blood pressure improved, the average decreases about 20.65 points. This results is more accurate to identify the effectiveness of the treatment.
+
+## Task 2: Basic Data Frame Profile
+
+1.  Create a data frame object with four columns corresponding to your data above: patient, pre_bp, post_bp, and diff_bp
+
+    ```{r t2-p1}
+    patient <- 1:20
+
+    bp_df <- data.frame(patient = patient,
+                        pre_bp  = pre_tr,
+                        post_bp = post_tr,
+                        diff_bp = change_tr,
+                        row.names = NULL)
+    bp_df
+    ```
+
+2.  Return only rows where the diff_bp column is negative. (Use \[ or learn about the subset() function if you’d like. If you use \[, don’t reference the original vector from the first part, access the column of the data frame when looking at making a comparison.)
+
+    ```{r}
+    subset(bp_df, diff_bp < 0)
+    ```
+
+    Notice how these are the same patients in Task 1, whose blood pressure went up after the treatment.
+
+3.  Add a new column to the data frame corresponding to TRUE if the post_bp is less than 120. Recall you can use \$ to reference a column. If you reference a column that doesn’t exist, and save a vector (of appropriate length in it), that vector becomes a column of your data frame! Similar to the previous question, don’t reference the original vector from the first part, access the column of the data frame when looking at making a comparison.
+
+    ```{r}
+    bp_df$post_under_120 <- bp_df$post_bp < 120
+    bp_df
+    ```
+
+    The patients 13, 14, and 17 have post_bp values at or above 120.
+
+4.  Finally, print the data frame out nicely in your final document by modifying the code below appropriately
+
+    ```{r}
+    knitr::kable(bp_df)
+    ```
