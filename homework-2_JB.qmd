@@ -1,0 +1,76 @@
+---
+title: "Homework-2"
+author: "Javi Brito"
+format: html
+editor: visual
+---
+
+## Task 1: Basic Vector practice
+
+Suppose we have data from a medical experiment on blood pressure. We have the following pre-treatment values for subjects 1 through 20:
+
+- 130, 128, 116, 124, 133, 134, 118, 126, 114, 127, 141, 138, 128, 140, 137, 131, 120, 128, 139, 135
+
+after treatment, the subjects were measured again (subjects 1 through 20 match)
+
+- 114, 98, 113, 99, 107, 116, 113, 111, 119, 117, 101, 119, 130, 122, 106, 106, 124, 102, 117, 113
+
+1.  Create two vectors. One vector corresponding to the pre measurements and one to the post measurements.
+
+    ```{r t1-p1}
+    pre_tr <- c(130, 128, 116, 124, 133, 134, 118, 126, 114, 127, 141, 138, 128, 140, 137, 131, 120, 128, 139, 135)
+
+    post_tr <- c(114, 98, 113, 99, 107, 116, 113, 111, 119, 117, 101, 119, 130, 122, 106, 106, 124, 102, 117, 113)
+    ```
+
+2.  Assign names to the vector elements using the paste() function. Note that names() can be overwritten by a character vector. To quickly create the names, try running the code. Create the same names for each vector’s elements.
+
+    ```{r t1-p2}
+    subject_names <- paste("Subject", 1:20, sep = "_")
+
+    names(pre_tr) <- subject_names
+    names(post_tr) <- subject_names
+    ```
+
+3.  Calculate the change in blood pressure for each patient by subtracting post-treatment measurements from pre-treatment measurements. Recall that R does math element-wise! Save this calculation as a new object (also a vector).
+
+    ```{r t1-p3}
+    change_tr <- pre_tr - post_tr
+    change_tr
+    ```
+
+4.  Calculate the average decrease in blood pressure across all patients.
+
+    ```{r t1-p4}
+    avg_change <- mean(change_tr)
+    avg_change
+    ```
+
+    The average of all 20 patients the blood pressure dropped by 17 points.
+
+5.  Determine which patients experienced a decrease in blood pressure after treatment (a positive change). Use the which() function to just return the indices (and names) associated with this type of change.
+
+    ```{r t1-p5}
+    decreased_tr <- which(change_tr > 0)
+    decreased_tr
+    ```
+
+    Based on the output, we can see how subjects 9,13, and 17 are not part of the list, indicating that their blood pressure went up after the treatment. Thus, the treatment didn't help them.
+
+6.  Subset the vector of differences to only return those that have a positive change.
+
+    ```{r t1-p6}
+    decreased_changes_tr <- change_tr[decreased_tr]
+    decreased_changes_tr 
+    ```
+
+    In this case we know that subjects 9, 13 and 17 are the patients whose blood pressure went up after the treatment.
+
+7.  Calculate the average decrease in blood pressure for those where the blood pressure decreased (positive change).
+
+    ```{r t1-p7}
+    avg_change_decreased <- mean(decreased_changes_tr)
+    avg_change_decreased
+    ```
+
+    Comparing the two resulted averages, notice how when we included everyone, the average decreased by 17, however this resulted included 3 patients whose blood pressure did not decrease. After we calculated the average only including the 17 patients who blood pressure improved, the average decreases about 20.65 points. This results is more accurate to identify the effectiveness of the treatment.
