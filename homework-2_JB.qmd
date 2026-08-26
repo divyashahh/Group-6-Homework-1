@@ -112,3 +112,57 @@ after treatment, the subjects were measured again (subjects 1 through 20 match)
     ```{r}
     knitr::kable(bp_df)
     ```
+
+## Task 3: List Practice
+
+Suppose we now also have data from another experiment where the ‘treatment’ was actually a placebo. We have the following pre-treatment values for subjects 1 through 10 (different set of subjects):
+
+- 138, 135, 147, 117, 152, 134, 114, 121, 131, 130
+
+after treatment, the subjects were measured again (subjects 1 through 10 match)
+
+- 105, 136, 123, 130, 134, 143, 135, 139, 120, 124
+
+1.  Create a new data frame with this data in it that is similar to the data frame from task 2 (including the new column).
+
+    ```{r}
+    pre_tr_pl <- c(138, 135, 147, 117, 152, 134, 114, 121, 131, 130)
+    post_tr_pl <-c(105, 136, 123, 130, 134, 143, 135, 139, 120, 124)
+
+    patient_pl <- 1:10
+    diff_pl <- pre_tr_pl - post_tr_pl
+
+    bp_df_pl <- data.frame(patient = patient_pl,
+                           pre_bp  = pre_tr_pl,
+                           post_bp = post_tr_pl,
+                           diff_bp = diff_pl,
+                           row.names = NULL)
+
+    bp_df_pl$post_under_120 <- bp_df_pl$post_bp < 120
+    bp_df_pl
+    ```
+
+2.  Now create and store a list with two elements:
+
+    - 1st element named treatment and contains the first data frame you created
+
+    - 2nd element named placebo and contains the second data frame you created.
+
+    ```{r}
+    experiment_list <- list(treatment = bp_df, placebo = bp_df_pl)
+    experiment_list
+    ```
+
+3.  Access the first list element using three different types of syntax.
+
+    ```{r}
+    experiment_list[[1]]
+    experiment_list[["treatment"]]
+    experiment_list$treatment
+    ```
+
+4.  In one line, access the placebo data frame, pre_bp column.
+
+    ```{r}
+    experiment_list$placebo$pre_bp
+    ```
