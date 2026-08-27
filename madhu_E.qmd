@@ -1,0 +1,149 @@
+---
+title: "Student E"
+author: "Madhu"
+editor: visual
+---
+
+## Task 1
+
+Given are pre treatment values \[130, 128, 116, 124, 133, 134, 118, 126, 114, 127, 141, 138, 128, 140, 137, 131, 120, 128, 139, 135\] and post treatment values \[114, 98, 113, 99, 107, 116, 113, 111, 119, 117, 101, 119, 130, 122, 106, 106, 124, 102, 117, 113\] for patients 1 to 20
+
+#### 1. Create 2 vectors
+
+```{r}
+pre <- c(130, 128, 116, 124, 133, 134, 118, 126, 114, 127, 141, 138, 128, 140, 137, 131, 120, 128, 139, 135)
+
+post <- c(114, 98, 113, 99, 107, 116, 113, 111, 119, 117, 101, 119, 130, 122, 106, 106, 124, 102, 117, 113)
+```
+
+#### 2. Assign elements using paste()
+
+```{r}
+name_list <- paste("Subject", 1:20, sep ="_")
+
+names(pre) <- name_list
+names(post) <- name_list
+
+```
+
+#### 3. Calculate $\Delta$ BP
+
+```{r}
+
+delta <- pre-post
+delta
+```
+
+#### 4. Calculate avg $\Delta$ BP
+
+```{r}
+mean(delta)
+```
+
+#### 5. Determine which patients experienced a decrease in BP (+ $\Delta$). Use which() and return associated indices and names
+
+```{r}
+decreased_bp <- which (delta > 0)
+decreased_bp
+```
+
+#### 6. Vector with only positive $\Delta$ BP
+
+```{r}
+positive <- delta[decreased_bp]
+positive
+```
+
+#### 7. Calculate avg positive $\Delta$ BP
+
+```{r}
+mean(positive)
+```
+
+## Task 2
+
+#### 1. Create a data frame object with four columns: patient, pre_bp, post_bp, and diff_bp
+
+```{r}
+bp_df <- data.frame(patient = name_list, 
+                              pre_bp = unname(pre), 
+                              post_bp = unname(post), 
+                              diff_bp = unname(delta))
+```
+
+#### 2. Return $-\Delta$ BP rows
+
+```{r}
+subset(bp_df, diff_bp < 0)
+```
+
+#### 3. Add boolean column indicating if post_bp \< 120
+
+```{r}
+
+bp_df$low_post_bp <- bp_df$post_bp < 120
+
+```
+
+#### 4. Print the data frame
+
+```{r}
+knitr::kable(bp_df)
+```
+
+## Task 3
+
+New "treatment" except its a placebo for 10 patients
+
+#### 1.  Create new df similar to task 2
+
+```{r}
+pre_placebo <- c(138, 135, 147, 117, 152, 134, 114, 121, 131, 130)
+post_placebo <- c(105, 136, 123, 130, 134, 143, 135, 139, 120, 124)
+
+placebo_bp_df <- data.frame(patient = paste("Subject", 1:10, sep ="_"),
+                            pre_bp = pre_placebo,
+                            post_bp = post_placebo,
+                            diff_bp = pre_placebo - post_placebo,
+                            low_post_bp = post_placebo < 120
+                            )
+
+```
+
+#### 2. Create and store a list with two elements
+
+```{r}
+
+```
+
+#### 3. 
+
+```{r}
+
+```
+
+#### 4. 
+
+```{r}
+
+```
+
+## Task 4
+
+#### 1. 
+
+```{r}
+
+```
+
+#### 2. 
+
+```{r}
+
+```
+
+#### 3. 
+
+```{r}
+
+```
