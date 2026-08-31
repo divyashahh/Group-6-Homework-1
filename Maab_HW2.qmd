@@ -1,0 +1,150 @@
+---
+title: "Homework 2 - Maab Aldulimy"
+editor: visual
+---
+
+## Task 1: Basic Vector Practice
+
+In this section, I create vectors for pre-treatment and post-treatment, then calculate difference between the respective vectors to determine average difference.
+
+```{r}
+#creating needed lists of pre and post treatment blood pressure measurements:
+pre_treatment<- c(130, 128, 116, 124, 133, 134, 118, 126, 114, 127, 141, 138, 128, 140, 137, 131, 120, 128, 139, 135)
+
+post_treatment<- c(114, 98, 113, 99, 107, 116, 113, 111, 119, 117, 101, 119, 130, 122, 106, 106, 124, 102, 117, 113)
+
+# Assigning names to the vector elements using the paste() function.
+
+subject_names <-paste("Subject", 1:20, sep = "_")
+
+#using names() function 
+names(pre_treatment) <- subject_names
+names(post_treatment) <- subject_names
+
+#Calculating the change in blood pressure across all patients.
+bp_change<- pre_treatment- post_treatment
+bp_change
+
+# Calculating the average decrease in blood pressure across all patients.
+avg_dec <- mean(bp_change)
+avg_dec
+
+#finding which patients experienced a decrease in blood pressure after treatment (a positive change)
+find_pos_change<-which(bp_change > 0)
+find_pos_change
+# selecting only positive blood pressure changes
+pos_change <- bp_change[bp_change >0]
+pos_change
+
+#average decrease in blood pressure for positive change valus 
+mean(pos_change)
+```
+
+## Task 2: Basic Data Frame Practice
+
+In this section I build a data frame from the previous vectors, filter for negative differences in blood pressure, add a normal range column which evaluates if blood pressure is less than 120, and print this data frame using the kable() function.
+
+```{r}
+#creating a data frame with columns patient,pre_bp,post_bp,diff_bp
+my_data <- data.frame(patient=subject_names,
+                      pre_bp=pre_treatment,
+                      post_bp=post_treatment,
+                      diff_bp=bp_change,
+                      row.names = NULL)
+my_data
+
+# Returning only rows where the diff_bp column is negative
+
+neg_diff_bp <- my_data[my_data$diff_bp < 0,]  # form my_data[row,columns]
+neg_diff_bp
+
+#Adding a new column named normal_range to the data frame that is TRUE if the post_bp is less than 120
+my_data$ normal_range <- my_data$post_bp < 120
+
+knitr::kable(my_data)
+
+```
+
+## Task 3: List Practice
+
+In this section I build the placebo data frame (same structure as Task 2), then combine both data frames into a named list, and demonstrate a few ways to access elements from that list.
+
+```{r}
+#creating placebo vectors 
+Pre_placebo<- c(138, 135, 147, 117, 152, 134, 114, 121, 131, 130)
+Post_placebo<- c(105, 136, 123, 130, 134, 143, 135, 139, 120, 124)
+
+# Assigning names to the placebo vector elements using the paste() function.
+
+p_subject_names <-paste("Subject", 1:10, sep = "_")
+
+#using names() function 
+names(Pre_placebo) <- p_subject_names
+names(Post_placebo) <- p_subject_names
+
+#Calculating the change in blood pressure across all patients.
+p_bp_change<- Pre_placebo- Post_placebo
+p_bp_change
+
+#creating a placebo data frame with columns patient,pre_bp,post_bp,diff_bp
+p_my_data <- data.frame(patient=p_subject_names,
+                      pre_bp=Pre_placebo,
+                      post_bp=Post_placebo,
+                      diff_bp=p_bp_change,
+                      normal_range=Post_placebo < 120,
+                      row.names = NULL)
+p_my_data
+
+#creating a list with two elements : treatment and placebo 
+bp_list <- list(treatment = my_data, placebo = p_my_data)
+
+#Three different ways to access the first element treatment form the bp_list:
+bp_list$treatment
+bp_list[["treatment"]] # using double brackets to get same object type data frame each time
+bp_list[[1]]
+
+# In one line, accessing the placebo data frame, pre_bp column.
+bp_list[["placebo"]]$pre_bp
+```
+
+## Task 4: Control Flow Practice
+
+In this section I add a status column to each data frame inside the list, then use a for loop with if/else logic to classify each patient as optimal, borderline, or high based on their post treatment/placebo blood pressure values.
+
+```{r}
+#creating a status column in treatment and placebo:
+bp_list$treatment$status<- character(20)
+bp_list$placebo$status<- character(10)
+
+#creating loop for treatment data frame with conditions optimal (≤ 120), borderline (120 < bp ≤ 130), and high (> 130).
+for (i in 1:nrow(bp_list$treatment)){
+  
+  if(bp_list$treatment$post_bp[i] <= 120) {
+    bp_list$treatment$status[i]<- "optimal" 
+    
+  }else if (bp_list$treatment$post_bp[i] > 120 & bp_list$treatment$post_bp[i] <= 130) {
+    bp_list$treatment$status[i]<- "borderline" 
+    
+  }else {
+    bp_list$treatment$status[i]<- "high" 
+  }
+}
+
+bp_list$treatment
+
+#creating the same loop with conditions optimal (≤ 120), borderline (120 < bp ≤ 130), and high (> 130) for placebo 
+
+for ( i in 1:nrow(bp_list$placebo)){
+  
+  if (bp_list$placebo$post_bp[i] <= 120){
+    bp_list$placebo$status[i]<- "optimal"
+    
+  }else if (bp_list$placebo$post_bp[i] > 120 & bp_list$placebo$post_bp[i]<= 130){
+    bp_list$placebo$status[i]<-"borderline"
+    
+  }else {
+    bp_list$placebo$status[i]<-"high"
+  }
+}
+bp_list$placebo
+```
