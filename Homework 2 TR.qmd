@@ -1,0 +1,127 @@
+---
+title: "Homework 2 - TR"
+editor: visual
+---
+
+## Task 1 Basic Vector Practice
+
+### Creating pre and post treatment vectors and assigning subject names
+
+```{r}
+# Creating Initial Vectors
+
+pretrt <- c(130, 128, 116, 124, 133, 134, 118, 126, 114, 127, 141, 138, 128, 140, 137, 131, 120, 128, 139, 135)
+
+posttrt <- c(114, 98, 113, 99, 107, 116, 113, 111, 119, 117, 101, 119, 130, 122, 106, 106, 124, 102, 117, 113)
+
+# Vector and patient IDs
+subject_ids <- paste("Subject", 1:20, sep = "_")
+
+names(pretrt) <- subject_ids
+names(posttrt) <- subject_ids
+```
+
+### Calculating the difference between pre & post treatment
+
+```{r}
+
+# initial difference calc
+prepostdiff <- c(pretrt - posttrt)
+
+# avg difference
+avgdiff <- mean(prepostdiff)
+
+# Subjects where bp decreased
+DecreaseBP <- which(prepostdiff > 0)
+
+avgDecrease <- mean(prepostdiff[DecreaseBP]) 
+
+```
+
+### Creating Data Frame
+
+```{r}
+#Create data frame no row names
+df <- data.frame(patient = subject_ids, pre_bp = pretrt, post_bp = posttrt, diff_bp = prepostdiff, row.names = NULL)
+
+negative_diff <- df[df$diff_bp < 0, ]
+
+df$Post_Under120 <- df$post_bp < 120
+
+knitr::kable(df)
+```
+
+## Task 3 List Practice
+
+### Creating lists for placebo dataset, replicating dataframe
+
+```{r}
+
+#placebo vectors
+pretrt_placebo <- c(138, 135, 147, 117, 152, 134, 114, 121, 131, 130)
+
+posttrt_placebo <- c(105, 136, 123, 130, 134, 143, 135, 139, 120, 124)
+
+placebo_diff <- pretrt_placebo - posttrt_placebo
+
+#placebo data frame creation
+placebo_df <- data.frame(patient = subject_ids, pre_bp = pretrt_placebo, post_bp = posttrt_placebo, diff_bp = placebo_diff, row.names = NULL )
+
+placebo_df$Post_Under120 <- placebo_df$post_bp < 120
+#render
+knitr::kable(placebo_df)
+
+# Creating lists
+list_bp <- list(treatment = df, placebo = placebo_df)
+
+list_bp$treatment
+list_bp[[1]]
+list_bp[["treatment"]]
+
+list_bp$placebo$pre_bp
+```
+
+## Task 4 Control Flow Practice
+
+### Loop logic for creating new columns for categories for non-placebo data
+
+```{r}
+# Creating new character columns for categories 
+list_bp$treatment$status <- character(20)
+
+list_bp$placebo$status <- character(10)
+
+# For loop logic for categorizing bp levels
+for(i in 1:nrow(list_bp$treatment)){
+  
+  if (list_bp$treatment$post_bp[i] <= 120) {list_bp$treatment$status[i] <- "optimal"}
+  
+  else if (list_bp$treatment$post_bp[i] > 120 & list_bp$treatment$post_bp[i] <=130) {list_bp$treatment$status[i] <- "borderline"}
+  
+  else {list_bp$treatment$status[i] <- "high"}
+}
+# render
+knitr::kable(list_bp$treatment)
+
+
+```
+
+### Loop logic for the placebo dataset, creating buckets for post-placebo bp levels.
+
+```{r}
+# For loop logic for categorizing bp levels
+for(i in 1:nrow(list_bp$placebo)){
+  
+  if (list_bp$placebo$post_bp[i] <= 120) {list_bp$placebo$status[i] <- "optimal"}
+  
+  else if (list_bp$placebo$post_bp[i] > 120 & list_bp$placebo$post_bp[i] <=130) {list_bp$placebo$status[i] <- "borderline"}
+  
+  else {list_bp$placebo$status[i] <- "high"}
+}
+
+#render
+placebo_df_status <- list_bp$placebo
+knitr::kable(list_bp$placebo)
+
+
+```
