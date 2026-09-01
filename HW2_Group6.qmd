@@ -65,3 +65,219 @@ avg_diff_decreased
 ```
 
 Comparing the two resulted averages, notice how when we included everyone, the average decreased by 17, however this resulted included 3 patients whose blood pressure did not decrease. After we calculated the average only including the 17 patients who blood pressure improved, the average decreases about 20.65 points. This results is more accurate to identify the effectiveness of the treatment.
+
+## Task 2: Basic Data Frame Practice
+
+For this second task, we built a data frame the previous vectors, filtered for negative differences in blood pressure, added a normal range column which evaluated if blood pressured is less than 120, and printed this data frame using the `kable()` function.
+
+```{r t2-p1}
+# Create the blood pressure data frame
+bp_df <- data.frame(
+  patient = subject_ids,
+  pre_bp = unname(pre_bp),
+  post_bp = unname(post_bp),
+  diff_bp = unname(diff_bp)
+)
+
+bp_df
+
+# Other method
+patient <- 1:20
+
+bp_df <- data.frame(patient = patient,
+                    pre_bp  = pre_tr,
+                    post_bp = post_tr,
+                    diff_bp,
+                    row.names = NULL)
+bp_df
+```
+
+```{r t2-p2}
+# Returning only rows where the diff_bp column is negative
+subset(bp_df, diff_bp < 0)
+# Other method
+negative_diff <- bp_df[bp_df$diff_bp < 0, ]
+negative_diff
+```
+
+```{r t2-p3}
+# Adding a new column named normal_range to the data frame that is TRUE if the post_bp is less than 120
+bp_df$post_under_120 <- bp_df$post_bp < 120
+bp_df
+```
+
+```{r t2-p4}
+# Print the data frame with knitr
+knitr::kable(bp_df)
+```
+
+## Task 3: List Practice
+
+For third section, we built the placebo data frame (same as Task 2), then we combined both data frames into a named list, and demonstrated a different ways to access elements from that list.
+
+```{r t3-p1}
+# Pre-treatment blood pressure measurements for placebo subjects
+placebo_pre <- c(138, 135, 147, 117, 152, 134, 114, 121, 131, 130)
+# Post-treatment blood pressure measurements for placebo subjects
+placebo_post <- c(105, 136, 123, 130, 134, 143, 135, 139, 120, 124)
+
+# Calculate the change in blood pressure
+placebo_diff <- placebo_pre - placebo_post
+
+# Create the placebo data frame
+placebo_df <- data.frame(
+  patient = subject_ids,
+  pre_bp = placebo_pre,
+  post_bp = placebo_post,
+  diff_bp = placebo_diff
+)
+
+
+
+# Other method
+subject_ids  <- 1:10
+
+placebo_df <- data.frame(
+  patient = subject_ids,
+  pre_bp = placebo_pre,
+  post_bp = placebo_post,
+  diff_bp = placebo_diff,
+  row.names = NULL
+)
+
+# Other method 2
+placebo_df <- data.frame(patient=subject_ids,
+                        pre_bp=placebo_pre,
+                        post_bp=placebo_post,
+                        diff_bp=placebo_diff,
+                        normal_range=Post_placebo < 120,
+                        row.names = NULL)
+
+
+
+# Add the same logical column used in Task 2
+placebo_df$post_under_120 <- placebo_df$post_bp < 120
+placebo_df
+```
+
+```{r t3-p2}
+# Combine the treatment and placebo data frames into a list
+bp_list <- list(
+  treatment = bp_df,
+  placebo = placebo_df
+)
+
+bp_list
+
+# Other method
+experiment_list <- list(treatment = bp_df, placebo = placebo_df)
+experiment_list
+
+```
+
+```{r t3-p3}
+# Access by numeric position
+bp_list[[1]]
+
+# Access by element name using double brackets
+bp_list[["treatment"]]
+
+# Access by element name using $
+bp_list$treatment
+
+# Other method using the experiemnt_list
+experiment_list[[1]]
+experiment_list[["treatment"]]
+experiment_list$treatment
+```
+
+```{r t3-p4}
+# Access the placebo pre_bp column
+bp_list$placebo$pre_bp
+experiment_list$placebo$pre_bp
+```
+
+## Task 4: Control Flow Practice
+
+For this last section, we added a status column to each data frame inside the list, then used a for loop with if/else logic to classify each patient as optimal, borderline, or high based on their post treatment/placebo blood pressure values.
+
+```{r t4-p1}
+# Create empty status columns in the data frames stored in the list
+bp_list$treatment$status <- character(nrow(bp_list$treatment))
+bp_list$placebo$status <- character(nrow(bp_list$placebo))
+
+# Other method
+bp_list$treatment$status <- character(20)
+bp_list$placebo$status <- character(10)
+```
+
+```{r t4-p2}
+for (i in 1:nrow(experiment_list$treatment)) {
+  bp_value <- experiment_list$treatment$post_bp[i]
+  if (bp_value <= 120) {
+    experiment_list$treatment$status[i] <- "optimal"
+  } else if (bp_value > 120 & bp_value <= 130) {
+    experiment_list$treatment$status[i] <- "borderline"
+  } else {
+    experiment_list$treatment$status[i] <- "high"
+  }
+}
+
+experiment_list$treatment
+
+
+# Other method
+
+for (i in 1:20) {
+  
+  x <- bp_list$treatment$post_bp[i]
+  
+  if (x <= 120) {
+    bp_list$treatment$status[i] <- "optimal"
+  } 
+  
+  else if (x > 130) {
+    bp_list$treatment$status[i] <- "high"
+  } 
+  
+  else {
+    bp_list$treatment$status[i] <- "borderline"
+  }
+  
+}
+```
+
+```{r t4-p3}
+for (i in 1:nrow(experiment_list$placebo)) {
+  bp_value <- experiment_list$placebo$post_bp[i]
+  if (bp_value <= 120) {
+    experiment_list$placebo$status[i] <- "optimal"
+  } else if (bp_value > 120 & bp_value <= 130) {
+    experiment_list$placebo$status[i] <- "borderline"
+  } else {
+    experiment_list$placebo$status[i] <- "high"
+  }
+}
+
+experiment_list$placebo
+
+# Other method
+
+for (i in 1:10) {
+  
+  x <- bp_list$placebo$post_bp[i]
+  
+  if (x <= 120) {
+    bp_list$placebo$status[i] <- "optimal"
+  } 
+  
+  else if (x > 130) {
+    bp_list$placebo$status[i] <- "high"
+  } 
+  
+  else {
+    bp_list$placebo$status[i] <- "borderline"
+  }
+  
+}
+```
