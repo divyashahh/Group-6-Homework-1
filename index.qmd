@@ -4,8 +4,6 @@ format: html
 editor: visual
 ---
 
-# Homework 2
-
 ## Task 1: Basic Vector practice
 
 For this first task, we created vectors for pre-treatment and post-treatment from a medical experiment on blood pressure. We assigned a name to these vectors, and then calculate difference between the respective vectors to determine average difference.
