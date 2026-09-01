@@ -74,8 +74,8 @@ For this second task, we built a data frame the previous vectors, filtered for n
 # Create the blood pressure data frame
 bp_df <- data.frame(
   patient = subject_ids,
-  pre_bp = unname(pre_bp),
-  post_bp = unname(post_bp),
+  pre_bp = unname(pre_tr),
+  post_bp = unname(post_tr),
   diff_bp = unname(diff_bp)
 )
 
@@ -150,7 +150,7 @@ placebo_df <- data.frame(patient=subject_ids,
                         pre_bp=placebo_pre,
                         post_bp=placebo_post,
                         diff_bp=placebo_diff,
-                        normal_range=Post_placebo < 120,
+                        normal_range=placebo_post < 120,
                         row.names = NULL)
 
 
