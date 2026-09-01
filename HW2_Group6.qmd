@@ -4,6 +4,64 @@ format: html
 editor: visual
 ---
 
-\# Homework 2
+# Homework 2
 
-Group 6 Homework 2 submission.
+## Task 1: Basic Vector practice
+
+For this first task, we created vectors for pre-treatment and post-treatment from a medical experiment on blood pressure. We assigned a name to these vectors, and then calculate difference between the respective vectors to determine average difference.
+
+```{r t1-p1}
+# Creating Initial Vectors
+pre_tr <- c(130, 128, 116, 124, 133, 134, 118, 126, 114, 127, 141, 138, 128, 140, 137, 131, 120, 128, 139, 135)
+
+post_tr <- c(114, 98, 113, 99, 107, 116, 113, 111, 119, 117, 101, 119, 130, 122, 106, 106, 124, 102, 117, 113)
+```
+
+```{r t1-p2}
+# Vector and patients IDs
+subject_ids <- paste("Subject", 1:20, sep = "_")
+
+names(pre_tr) <- subject_ids
+names(post_tr) <- subject_ids
+```
+
+```{r t1-p3}
+# The change in blood pressure across all patients
+diff_bp <- pre_tr - post_tr
+diff_bp
+```
+
+```{r t1-p4}
+# Calculating the average in blood pressure across all patients
+avg_diff <- mean(diff_bp)
+avg_diff
+```
+
+The average of all 20 patients the blood pressure dropped by 17 points.
+
+```{r t1-p5}
+# Find subjects with a positive blood pressure change
+decreased_bp <- which(diff_bp > 0)
+decreased_bp
+```
+
+Based on the output, we can see how subjects 9,13, and 17 are not part of the list, indicating that their blood pressure went up after the treatment. Thus, the treatment didn't help them.
+
+```{r t1-p6}
+# Return only positive blood pressure changes
+positive_diff <- diff_bp[diff_bp > 0]
+positive_diff
+
+# Other method used
+positive_diff <- diff_bp[decreased_bp]
+positive_diff
+```
+
+In this case we know that subjects 9, 13 and 17 are the patients whose blood pressure went up after the treatment.
+
+```{r t1-p7}
+avg_diff_decreased <- mean(positive_diff)
+avg_diff_decreased
+```
+
+Comparing the two resulted averages, notice how when we included everyone, the average decreased by 17, however this resulted included 3 patients whose blood pressure did not decrease. After we calculated the average only including the 17 patients who blood pressure improved, the average decreases about 20.65 points. This results is more accurate to identify the effectiveness of the treatment.
