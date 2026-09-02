@@ -13,3 +13,31 @@ editor: visual
 3.  What is Git and what is GitHub?
 
 4.  What are the two main differences between a tibble and a data.frame?
+
+## Task 2: Reading Delimited Data
+
+### Glass Data
+
+1.  Read this data into R directly from the URL using functions from the tidyverse. Notice that the data doesn’t include column names - add those (in a manner of your choosing). Print out the tibble (just call the object name).
+
+    ```{r}
+    library(tidyverse)
+    glass_data <- read.csv(
+      "https://www4.stat.ncsu.edu/~online/datasets/glass.data",
+      col.names = c("ID", "RI", "Na", "Mg", "Al", "Si", "K", "Ca", "Ba", "Fe", "Type")
+    )
+    glass_data
+    ```
+
+### Yeast Data
+
+2.  Read this data into R directly from the URL using functions from the tidyverse. Notice that the data doesn’t include column names - add those (in a manner of your choosing). Print out the tibble (just call the object name)
+
+    ```{r}
+    yeast_data <- read_table(
+      "https://www4.stat.ncsu.edu/~online/datasets/yeast.data",
+      col_names = c("seq_name", "mcg", "gvh", "alm", "mit", "erl", "pox", "vac", "nuc", "class")
+    )
+
+    yeast_data
+    ```
